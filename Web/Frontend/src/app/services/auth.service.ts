@@ -1,6 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { Observable } from "rxjs";
+
+const USER_KEY = 'auth-user';
 
 @Injectable({ providedIn: "root" })
 export class AppAuthService {
@@ -10,14 +13,9 @@ export class AppAuthService {
 
     authenticated = () => !!this.token();
 
-    login(data: any): void {
-        this.http
-            .post("auths", data)
-            .subscribe((result: any) => {
-                if (!result || !result.token) { return; }
-                localStorage.setItem("token", result.token);
-                this.router.navigate(["/main/home"]);
-            });
+    login(data: any): Observable<any> {
+        return this.http
+            .post("auths", data);
     }
 
     signin = () => this.router.navigate(["/login"]);
@@ -28,4 +26,13 @@ export class AppAuthService {
     }
 
     token = () => localStorage.getItem("token");
+
+    public saveUser(user: any): void {
+        window.sessionStorage.removeItem(USER_KEY);
+        window.sessionStorage.setItem('auth-user', JSON.stringify(user))
+    }
+
+    public getUser(): any {
+        return JSON.parse(<string>sessionStorage.getItem('auth-user'));
+    }
 }

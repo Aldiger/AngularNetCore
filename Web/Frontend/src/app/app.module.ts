@@ -8,6 +8,7 @@ import { AppHttpInterceptor } from "./app.http.interceptor";
 import { ROUTES } from "./app.routes";
 import { AppLayoutsModule } from "./layouts/layouts.module";
 import { AppSettingsService } from "./settings/settings.service";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -16,7 +17,8 @@ import { AppSettingsService } from "./settings/settings.service";
         BrowserModule,
         HttpClientModule,
         RouterModule.forRoot(ROUTES),
-        AppLayoutsModule
+        AppLayoutsModule,
+        BrowserAnimationsModule
     ],
     providers: [
         { provide: ErrorHandler, useClass: AppErrorHandler },

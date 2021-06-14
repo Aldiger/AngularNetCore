@@ -9,3 +9,9 @@
 /Web/obj
 /.vs
 /Web/Frontend/node_modules
+/Application/bin
+/Database/bin
+/Domain/bin
+/Model/bin
+/Web/bin
+/Web/Frontend/.idea
