@@ -1,3 +1,4 @@
+using System;
 using Architecture.Domain;
 using Architecture.Model;
 
@@ -5,11 +6,11 @@ namespace Architecture.Application
 {
     public sealed class ProductAuditTrailFactory : IProductAuditTrailFactory
     {
-        public ProductAuditTrail Create(ProductAuditTrailModel model, User user)
+        public ProductAuditTrail Create(Product product, AuditRow row, AuditAction action, DateTime date)
         {
             return new ProductAuditTrail
             (
-                model.Name,model.Description, model.Price,model.ProductId, model.UserId,(AuditRow)model.Row, (AuditAction)model.Action
+                product.Name, product.Description, product.Price, product.Id, product.UserId,row, action, date
 
             );
         }

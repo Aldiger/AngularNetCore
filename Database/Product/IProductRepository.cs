@@ -12,7 +12,7 @@ namespace Architecture.Database
 
         Task<ProductModel> GetModelAsync(long id);
 
-        Task<Grid<ProductModel>> GridAsync(GridParameters parameters);
+        Task<Grid<ProductModel>> GridAsync(GridParameters parameters, long? userId);
 
         Task<IEnumerable<ProductModel>> ListModelAsync();
 

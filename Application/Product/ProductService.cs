@@ -1,3 +1,4 @@
+using System;
 using Architecture.Database;
 using Architecture.Domain;
 using Architecture.Model;
@@ -6,6 +7,8 @@ using DotNetCore.Objects;
 using DotNetCore.Results;
 using DotNetCore.Validation;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Architecture.Application
@@ -14,6 +17,7 @@ namespace Architecture.Application
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProductFactory _productFactory;
+        private readonly IProductAuditTrailFactory _productAuditTrailFactory;
         private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
 
@@ -21,14 +25,17 @@ namespace Architecture.Application
         (
             IUnitOfWork unitOfWork,
             IProductFactory productFactory,
+            IProductAuditTrailFactory productAuditTrailFactory,
             IUserRepository userRepository,
             IProductRepository productRepository
         )
         {
             _unitOfWork = unitOfWork;
             _productFactory = productFactory;
+            _productAuditTrailFactory = productAuditTrailFactory;
             _userRepository = userRepository;
             _productRepository = productRepository;
+
         }
 
         public async Task<IResult<long>> AddAsync(ProductModel model)
@@ -40,7 +47,10 @@ namespace Architecture.Application
             var user = await _userRepository.GetAsync(model.UserId);
             
             var product = _productFactory.Create(model, user);
+            var productAuditTrail = _productAuditTrailFactory.Create(product, AuditRow.Before, AuditAction.Insert, DateTime.UtcNow);
 
+            product.ProductAuditTrails= new List<ProductAuditTrail>{productAuditTrail};
+            
             await _productRepository.AddAsync(product);
 
             await _unitOfWork.SaveChangesAsync();
@@ -50,12 +60,7 @@ namespace Architecture.Application
 
         public async Task<IResult> DeleteAsync(long id)
         {
-            //var authId = await _userRepository.GetAuthIdByUserIdAsync(id);
-
             await _productRepository.DeleteAsync(id);
-
-            //await _authService.DeleteAsync(authId);
-
             await _unitOfWork.SaveChangesAsync();
 
             return Result.Success();
@@ -66,9 +71,19 @@ namespace Architecture.Application
             return _productRepository.GetModelAsync(id);
         }
 
-        public Task<Grid<ProductModel>> GridAsync(GridParameters parameters)
+        public async Task<Grid<ProductModel>> GridAsync(GridParameters parameters, ClaimsPrincipal user)
         {
-            return _productRepository.GridAsync(parameters);
+            var userId = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Actor)?.Value;
+            var role = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+            long? userIdlong = null;
+            if (role == Roles.Worker.ToString())
+            {
+                long.TryParse(userId, out long userIdlongparse);
+                userIdlong = userIdlongparse;
+            }
+            
+            var results=await _productRepository.GridAsync(parameters, userIdlong);
+            return results;
         }
 
 
@@ -85,9 +100,17 @@ namespace Architecture.Application
 
             var product = await _productRepository.GetAsync(model.Id);
 
+            var date = DateTime.UtcNow;
+
             if (product is null) return Result.Success();
 
+            var productAuditTrailBefore = _productAuditTrailFactory.Create(product, AuditRow.Before, AuditAction.Update, date);
+
             product.Update(model.Name, model.Description, model.Price);
+
+            var productAuditTrailAfter = _productAuditTrailFactory.Create(product, AuditRow.After, AuditAction.Update, date);
+
+            product.ProductAuditTrails = new List<ProductAuditTrail> {productAuditTrailBefore, productAuditTrailAfter};
 
             await _productRepository.UpdateAsync(product);
 
@@ -95,5 +118,7 @@ namespace Architecture.Application
 
             return Result.Success();
         }
+
+
     }
 }

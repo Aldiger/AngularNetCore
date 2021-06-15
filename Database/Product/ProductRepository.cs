@@ -18,9 +18,13 @@ namespace Architecture.Database
             return Queryable.Where(ProductExpression.Id(id)).Select(ProductExpression.Model).SingleOrDefaultAsync();
         }
 
-        public Task<Grid<ProductModel>> GridAsync(GridParameters parameters)
+        public Task<Grid<ProductModel>> GridAsync(GridParameters parameters, long? userId)
         {
-            return Queryable.Select(ProductExpression.Model).GridAsync(parameters);
+            if (userId ==null)
+            {
+                return Queryable.Select(ProductExpression.Model).GridAsync(parameters);
+            }
+            return Queryable.Where(x=>x.UserId == userId).Select(ProductExpression.Model).GridAsync(parameters);
         }
 
         public async Task<IEnumerable<ProductModel>> ListModelAsync()

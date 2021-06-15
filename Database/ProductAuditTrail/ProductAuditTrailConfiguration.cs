@@ -28,9 +28,6 @@ namespace Architecture.Database
 
             builder.HasOne(product => product.Product).WithMany(x=>x.ProductAuditTrails).HasForeignKey(x=>x.ProductId);
             builder.HasIndex("ProductId");
-
-            builder.HasOne(product => product.User).WithMany(x => x.ProductAuditTrails).HasForeignKey(x => x.UserId);
-            builder.HasIndex("UserId");
         }
     }
 }

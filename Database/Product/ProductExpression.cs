@@ -7,8 +7,6 @@ namespace Architecture.Database
 {
     public static class ProductExpression
     {
-        //public static Expression<Func<User, long>> AuthId => user => user.Auth.Id;
-
         public static Expression<Func<Product, ProductModel>> Model => product => new ProductModel
         {
             Id = product.Id,

@@ -7,22 +7,24 @@ namespace Architecture.Database
 {
     public static class ProductAuditTrailExpression
     {
-        //public static Expression<Func<User, long>> AuthId => user => user.Auth.Id;
 
-        public static Expression<Func<Product, ProductModel>> Model => product => new ProductModel
+        public static Expression<Func<ProductAuditTrail, ProductAuditTrailModel>> Model => productAuditTrailModel => new ProductAuditTrailModel
         {
-            Id = product.Id,
-            Name = product.Name,
-            Description = product.Description,
-            Price = product.Price,
-            DateAdded = product.DateAdded,
-            DateModified = product.DateModified,
-            UserId= product.UserId
+            Id = productAuditTrailModel.Id,
+            Name = productAuditTrailModel.Name,
+            Description = productAuditTrailModel.Description,
+            Price = productAuditTrailModel.Price,
+            DateAdded = productAuditTrailModel.DateAdded,
+            ProductId = productAuditTrailModel.ProductId,
+            Row = (int)productAuditTrailModel.Row,
+            Action = (int)productAuditTrailModel.Action,
+            ActionName = productAuditTrailModel.Action.ToString(),
+            UserId = productAuditTrailModel.UserId
         };
 
-        public static Expression<Func<Product, bool>> Id(long id)
+        public static Expression<Func<ProductAuditTrail, bool>> ProductId(long productId)
         {
-            return product => product.Id == id;
+            return productAuditTrail => productAuditTrail.ProductId == productId;
         }
         public static Expression<Func<Product, bool>> UserId(long userId)
         {
