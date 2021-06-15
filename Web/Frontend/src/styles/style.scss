@@ -69,3 +69,7 @@ button,
 table thead th {
     user-select: none;
 }
+
+.cdk-overlay-pane {
+    overflow: auto !important;
+}

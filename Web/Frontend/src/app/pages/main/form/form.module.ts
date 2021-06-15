@@ -8,6 +8,14 @@ import { AppSelectCommentModule } from "src/app/components/select/comment/commen
 import { AppSelectPostModule } from "src/app/components/select/post/post.module";
 import { AppSelectUserModule } from "src/app/components/select/user/user.module";
 import { AppFormComponent } from "./form.component";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatTableModule} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatMenuModule} from "@angular/material/menu";
 
 const ROUTES: Routes = [
     { path: "", component: AppFormComponent }
@@ -24,7 +32,15 @@ const ROUTES: Routes = [
         AppLabelModule,
         AppSelectCommentModule,
         AppSelectPostModule,
-        AppSelectUserModule
+        AppSelectUserModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatMenuModule
     ]
 })
 export class AppFormModule { }

@@ -1,26 +1,109 @@
-<h2>Form</h2>
 
-<div class="uk-margin">
-    <app-button text="Set" (click)="set()"></app-button>
-    <app-button class="uk-margin-left" text="{{ disabled ? 'Enable' : 'Disable' }}" (click)="disabled = !disabled"></app-button>
+<div class="card table-responsive">
+    <div class="card-header">
+        <p class="mat-card-title">Product List</p>
+        <p class="mat-card-subtitle">All products</p>
+    </div>
+    <div class="card-body">
+        <!--        Search Field-->
+        <mat-form-field class="ml-4">
+            <mat-label>Search
+                <mat-icon class="float-right">search</mat-icon>
+            </mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="..." #input>
+        </mat-form-field>
+
+        <table mat-table [dataSource]="dataSource" matSort style="width: 100%">
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef> Product Name</th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Description</th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+            </ng-container>
+
+            <!-- Active Column -->
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+            </ng-container>
+
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="actions">
+                <tr>
+                    <th mat-header-cell *matHeaderCellDef> Action</th>
+                </tr>
+                <tr>
+                    <td  mat-cell *matCellDef="let row" style="width:20%">
+                        <button mat-icon-button [disabled]="currentUser?.role == 'admin'" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon *ngIf="currentUser?.role != 'admin'">more_vert</mat-icon>
+                            <mat-hint *ngIf="currentUser?.role == 'admin'">You can only view the table!</mat-hint>
+
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button *ngIf="currentUser?.role != 'admin'" mat-menu-item (click)="editProduct(row.id)">
+                                <mat-icon>edit</mat-icon>
+                                <span>Edit</span>
+                            </button>
+                            <button *ngIf="currentUser?.role != 'admin'" mat-menu-item [disabled]="loading" (click)="deleteProduct(row.id)">
+                                <mat-icon>delete</mat-icon>
+                                <span>Delete</span>
+                            </button>
+
+                            <button *ngIf="currentUser?.role != 'admin'" mat-menu-item [disabled]="loading" (click)="showHistory(row.id)">
+                                <mat-icon>history</mat-icon>
+                                <span>History</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                <tr>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row style="cursor: pointer"
+                *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+        </table>
+
+        <div class="row">
+            <mat-paginator [pageSize]="5"
+                           [length]="dataSource.data.length"
+                           [pageSizeOptions]="[5, 10, 20]"
+                           showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </div>
 </div>
 
-<form [formGroup]="form">
-    <fieldset class="uk-fieldset" [disabled]="disabled">
-        <div class="uk-margin">
-            <app-label for="userId" text="User"></app-label>
-            <app-select-user formControlName="userId" [child]="post" text="User"></app-select-user>
-        </div>
-        <div class="uk-margin">
-            <app-label for="postId" text="Post"></app-label>
-            <app-select-post formControlName="postId" [child]="comment" #post text="Post"></app-select-post>
-        </div>
-        <div class="uk-margin">
-            <app-label for="commentId" text="Comment"></app-label>
-            <app-select-comment formControlName="commentId" #comment text="Comment"></app-select-comment>
-        </div>
-        <div class="uk-margin">
-            <pre>{{ this.form.value | json }}</pre>
-        </div>
-    </fieldset>
+
+<form [formGroup]="productForm" (ngSubmit)="addProduct()" *ngIf="currentUser?.role != 'admin'" class="example-form">
+
+    <mat-form-field class="example-full-width">
+        <mat-label>Product Name</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <mat-label>Product Description</mat-label>
+        <input matInput formControlName="description">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="price">
+    </mat-form-field>
+
+    <mat-form-field hidden class="example-full-width">
+        <mat-label>User Id</mat-label>
+        <input hidden matInput type="number" formControlName="userId">
+    </mat-form-field>
+
+    <button mat-raised-button type="submit">Add</button>
+
 </form>
