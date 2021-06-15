@@ -14,7 +14,8 @@ namespace Architecture.Domain
             long productId,
             long userId,
             AuditRow row,
-            AuditAction action
+            AuditAction action,
+            DateTime date
         )
         {
             Name = name;
@@ -24,14 +25,10 @@ namespace Architecture.Domain
             ProductId = productId;
             Action = action;
             Row = row;
-            SetDateInitial();
+            DateAdded = date;
         }
 
-        private void SetDateInitial()
-        {
-            var now = DateTime.UtcNow;
-            DateAdded = now;
-        }
+        public ProductAuditTrail() { }
 
         public AuditRow Row { get; set; }
         public AuditAction Action { get; set; }

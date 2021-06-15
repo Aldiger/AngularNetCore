@@ -2,16 +2,11 @@ using System;
 
 namespace Architecture.Model
 {
-    public sealed record ProductAuditTrailModel1
-    {
-        public int Action { get; set; }
-        public string Before { get; set; }
-        public string After { get; set; }
-    }
-
     public sealed record ProductAuditTrailModel
     {
+        public long Id { get; set; }
         public int Row { get; set; }
+        public string ActionName { get; set; }
         public int Action { get; set; }
 
         public string Name { get; set; }

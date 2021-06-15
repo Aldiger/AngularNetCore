@@ -2,6 +2,7 @@ using Architecture.Model;
 using DotNetCore.Objects;
 using DotNetCore.Results;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Architecture.Application
@@ -14,9 +15,7 @@ namespace Architecture.Application
 
         Task<ProductModel> GetAsync(long id);
 
-        Task<Grid<ProductModel>> GridAsync(GridParameters parameters);
-
-        //Task<IResult> InactivateAsync(long id);
+        Task<Grid<ProductModel>> GridAsync(GridParameters parameters, ClaimsPrincipal user);
 
         Task<IEnumerable<ProductModel>> ListAsync();
 

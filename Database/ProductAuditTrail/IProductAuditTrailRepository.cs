@@ -9,13 +9,7 @@ namespace Architecture.Database
 {
     public interface IProductAuditTrailRepository : IRepository<ProductAuditTrail>
     {
-
-        //Task<ProductModel> GetModelAsync(long id);
-
-        //Task<Grid<ProductModel>> GridAsync(GridParameters parameters);
-
-        //Task<IEnumerable<ProductModel>> ListModelAsync();
-
-        //Task UpdateProductAsync(Product product);
+        Task<IList<ProductAuditTrailModel>> GetListAsync(IList<long> productIds);
+        Task<Grid<ProductAuditTrailModel>> GridAsync(GridParameters parameters);
     }
 }

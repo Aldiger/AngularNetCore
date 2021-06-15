@@ -8,18 +8,6 @@ namespace Architecture.Application
 {
     public interface IProductAuditTrailService
     {
-        Task<IResult<long>> AddAsync(ProductModel model);
-
-        Task<IResult> DeleteAsync(long id);
-
-        //Task<ProductModel> GetAsync(long id);
-
-        //Task<Grid<ProductModel>> GridAsync(GridParameters parameters);
-
-        ////Task<IResult> InactivateAsync(long id);
-
-        //Task<IEnumerable<ProductModel>> ListAsync();
-
-        //Task<IResult> UpdateAsync(ProductModel model);
+        Task<List<ProductAuditActionModel>> GetAsync(long productId);
     }
 }

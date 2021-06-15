@@ -6,7 +6,6 @@ using DotNetCore.Results;
 using DotNetCore.Security;
 using DotNetCore.Validation;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -90,15 +89,15 @@ namespace Architecture.Application
 
             var fullName = $"{user.FirstName} {user.LastName}";
 
-            claims.AddSub(auth.Id.ToString());
+            claims.Add(new Claim(ClaimTypes.Actor, auth.Id.ToString()));
 
-            claims.AddSub(fullName);
+            claims.Add(new Claim(ClaimTypes.Name, fullName));
 
-            claims.AddRoles(auth.Roles.ToArray());
+            claims.AddRoles(new string []{auth.Roles.ToString()});
 
             var token = _jsonWebTokenService.Encode(claims);
 
-            return new TokenModel(token, fullName,"" /*string.Join(", "auth.Roles.ToArray().Select(x=>x.ToString()))*/, auth.Id.ToString()).Success();
+            return new TokenModel(token, fullName,auth.Roles.ToString(), auth.Id.ToString()).Success();
         }
     }
 }

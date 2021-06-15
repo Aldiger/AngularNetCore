@@ -13,11 +13,5 @@ namespace Architecture.Model
         public void UserId() => RuleFor(product => product.UserId).NotEmpty();
 
         public void Price() => RuleFor(product => product.Price).NotEmpty();
-
-        //public void Email() => RuleFor(user => user.Email).EmailAddress();
-
-        //public void LastName() => RuleFor(user => user.LastName).NotEmpty();
-
-        //public void Auth() => RuleFor(user => user.Auth).SetValidator(new AuthModelValidator());
     }
 }
