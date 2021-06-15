@@ -20,6 +20,7 @@ namespace Architecture.Application
         private readonly IProductAuditTrailFactory _productAuditTrailFactory;
         private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IProductAuditTrailRepository _productAuditTrailRepository;
 
         public ProductService
         (
@@ -27,7 +28,8 @@ namespace Architecture.Application
             IProductFactory productFactory,
             IProductAuditTrailFactory productAuditTrailFactory,
             IUserRepository userRepository,
-            IProductRepository productRepository
+            IProductRepository productRepository,
+            IProductAuditTrailRepository productAuditTrailRepository
         )
         {
             _unitOfWork = unitOfWork;
@@ -35,6 +37,7 @@ namespace Architecture.Application
             _productAuditTrailFactory = productAuditTrailFactory;
             _userRepository = userRepository;
             _productRepository = productRepository;
+            _productAuditTrailRepository = productAuditTrailRepository;
 
         }
 
